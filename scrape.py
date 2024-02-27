@@ -6,7 +6,6 @@ import datetime
 
 # CRC Website for Wait Times
 url = "https://live.waitz.io/4vxie66a29ct"
-fitness_center_class_name = "css-1tglk97"
 
 def get_busy_object():
     # Use Selenium to scrape the page once it has fully loaded
@@ -14,9 +13,12 @@ def get_busy_object():
     driver.get(url)
     valid = True
     try:
-        fitness_center_busy_element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, fitness_center_class_name))
+        # Have to do this because they randomize class names
+        wait_till_loaded = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.TAG_NAME, "h2"))
         )
+        # Will work so long as structure remains the same
+        fitness_center_busy_element = driver.find_elements(By.TAG_NAME, 'p')[1]
     except:
         valid = False
         print("Error: most likely the page never loaded or the class name changed")
@@ -41,5 +43,5 @@ def get_busy_object():
         "minutes": current_time.minute,
         "busy": integer_busy
     }
-
+    print(busy_at_time)
     return busy_at_time

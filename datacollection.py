@@ -22,4 +22,4 @@ def collect(length=15):
 
 
 if __name__ == "__main__":
-    collect()
+    collect(60*60*3)
