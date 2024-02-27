@@ -93,3 +93,19 @@ def read_rows(database_name=db, table_name=table):
             connection.close()
             print('SQLite Connection closed')
 
+def read_specific_date_rows(database_name=db, table_name=table, weekday=0, hour=0, minute=0):
+    try:
+        connection = sqlite3.connect(database_name)
+        cursor = connection.cursor()
+        select_query = "SELECT percent_full FROM %s WHERE weekday = %d AND hour = %d AND minute = %d" % (table_name, weekday, hour, minute)
+        rows = cursor.execute(select_query).fetchall()
+        print(rows)
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print('Error occurred - ', error)
+
+    finally:
+        if connection:
+            connection.close()
+            print('SQLite Connection closed')
