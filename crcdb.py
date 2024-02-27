@@ -3,6 +3,7 @@ import sqlite3
 db = "crc.db"
 table = "busy"
 blank_data = {
+    "isodate": "",
     "weekday": -1,
     "hour": -1,
     "minutes": -1,
@@ -16,7 +17,7 @@ def create_db_and_drop(database_name=db, table_name=table):
         cursor = connection.cursor()
         drop_if_exists_query = "DROP TABLE IF EXISTS %s" % (table_name)
         cursor.execute(drop_if_exists_query)
-        create_table_query = "CREATE TABLE %s (weekday INTEGER, hour INTEGER, minute INTEGER, percent_full INTEGER)" % (table_name)
+        create_table_query = "CREATE TABLE %s (isodate TEXT, weekday INTEGER, hour INTEGER, minute INTEGER, percent_full INTEGER)" % (table_name)
         cursor.execute(create_table_query)
         connection.commit()
         cursor.close()
@@ -35,7 +36,7 @@ def initialize_db(database_name=db, table_name=table):
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
-        create_table_query = "CREATE TABLE %s (weekday INTEGER, hour INTEGER, minute INTEGER, percent_full INTEGER)" % (table_name)
+        create_table_query = "CREATE TABLE %s (isodate TEXT, weekday INTEGER, hour INTEGER, minute INTEGER, percent_full INTEGER)" % (table_name)
         cursor.execute(create_table_query)
         connection.commit()
         cursor.close()
@@ -52,6 +53,7 @@ def initialize_db(database_name=db, table_name=table):
 """
 # Assume data is of the form
     busy_at_time = {
+        "isodate": current_time.isoformat(),
         "weekday": current_time.weekday(),
         "hour": current_time.hour,
         "minutes": current_time.minute,
@@ -62,8 +64,8 @@ def insert_data(database_name=db, table_name=table, data=blank_data):
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
-        weekday, hour, minutes, busy = data.values()
-        insert_data_query = "INSERT INTO %s VALUES (%d, %d, %d, %d)" % (table_name, weekday, hour, minutes, busy)
+        isodate, weekday, hour, minutes, busy = data.values()
+        insert_data_query = "INSERT INTO %s VALUES (%s, %d, %d, %d, %d)" % (table_name, isodate, weekday, hour, minutes, busy)
         cursor.execute(insert_data_query)
         connection.commit()
         cursor.close()
