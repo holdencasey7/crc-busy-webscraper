@@ -30,7 +30,6 @@ def get_busy_object():
 
     # Combine current time and busy into single object
     busy_at_time = {
-        "isodate": current_time.isoformat(),
         "weekday": current_time.weekday(),
         "hour": current_time.hour,
         "minutes": current_time.minute,
