@@ -3,11 +3,11 @@ import sqlite3
 db = "crc.db"
 table = "busy"
 blank_data = {
-        "weekday": -1,
-        "hour": -1,
-        "minutes": -1,
-        "busy": -1
-    }
+    "weekday": -1,
+    "hour": -1,
+    "minutes": -1,
+    "busy": -1
+}
 
 # Only use this once as it drops the existing table
 def create_db_and_drop(database_name=db, table_name=table):
