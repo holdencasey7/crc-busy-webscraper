@@ -205,3 +205,9 @@ def cleanup(database_name=db, table_name=table):
         if connection:
             connection.close()
             print('SQLite Connection closed')
+<<<<<<< HEAD
+=======
+
+    
+read_specific_time_rows(weekday=1, hour=18)
+>>>>>>> baedb995be0bd2aee8989d7129c0edf47b632686
