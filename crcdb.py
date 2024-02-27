@@ -93,4 +93,3 @@ def read_rows(database_name=db, table_name=table):
             connection.close()
             print('SQLite Connection closed')
 
-
