@@ -3,8 +3,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import datetime
-import json
-import sqlite3
 
 # CRC Website for Wait Times
 url = "https://live.waitz.io/4vxie66a29ct"
@@ -39,4 +37,3 @@ def get_busy_object():
     }
     
     return busy_at_time
-
