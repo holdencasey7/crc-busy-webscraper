@@ -26,9 +26,6 @@ class CRC_Timer(Timer):
 
 
 def scrape_and_insert():
-    # Make sure db exists
-    crcdb.initialize_db()
-
     # Scrape CRC site
     busy_object = scrape.get_busy_object()
 
