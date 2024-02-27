@@ -13,7 +13,7 @@ def main():
     # Repeat every 1 minute
     crc_timer = crctimer.CRC_Timer()
     crc_timer.start()
-    time.sleep(1200)
+    time.sleep(10)
     crc_timer.stop()
 
     # Read the data

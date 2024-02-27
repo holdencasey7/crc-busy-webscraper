@@ -87,13 +87,15 @@ def read_rows(database_name=db, table_name=table):
 
     except sqlite3.Error as error:
         print('Error occurred - ', error)
+        rows = []
 
     finally:
         if connection:
             connection.close()
             print('SQLite Connection closed')
+        return rows
 
-def read_specific_date_rows(database_name=db, table_name=table, weekday=0, hour=0, minute=0):
+def read_specific_time_rows(database_name=db, table_name=table, weekday=0, hour=0, minute=0):
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -104,8 +106,69 @@ def read_specific_date_rows(database_name=db, table_name=table, weekday=0, hour=
 
     except sqlite3.Error as error:
         print('Error occurred - ', error)
+        rows = []
 
     finally:
         if connection:
             connection.close()
             print('SQLite Connection closed')
+        return rows
+
+def read_specific_day_rows(database_name=db, table_name=table, weekday=0):
+    try:
+        connection = sqlite3.connect(database_name)
+        cursor = connection.cursor()
+        select_query = "SELECT percent_full FROM %s WHERE weekday = %d" % (table_name, weekday)
+        rows = cursor.execute(select_query).fetchall()
+        print(rows)
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print('Error occurred - ', error)
+        rows = []
+
+    finally:
+        if connection:
+            connection.close()
+            print('SQLite Connection closed')
+        return rows
+
+def read_specific_day_average(database_name=db, table_name=table, weekday=0):
+    try:
+        connection = sqlite3.connect(database_name)
+        cursor = connection.cursor()
+        select_query = "SELECT AVG(percent_full) FROM %s WHERE weekday = %d" % (table_name, weekday)
+        average = cursor.execute(select_query).fetchone()[0]
+        print(average)
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print('Error occurred - ', error)
+        average = -1
+
+    finally:
+        if connection:
+            connection.close()
+            print('SQLite Connection closed')
+        return average
+
+def read_specific_day_and_hour_average(database_name=db, table_name=table, weekday=0, hour=0):
+    try:
+        connection = sqlite3.connect(database_name)
+        cursor = connection.cursor()
+        select_query = "SELECT AVG(percent_full) FROM %s WHERE weekday = %d AND hour = %d" % (table_name, weekday, hour)
+        average = cursor.execute(select_query).fetchone()[0]
+        print(average)
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print('Error occurred - ', error)
+        average = -1
+
+    finally:
+        if connection:
+            connection.close()
+            print('SQLite Connection closed')
+        return average
+
+read_specific_day_and_hour_average(weekday=1, hour=13)
