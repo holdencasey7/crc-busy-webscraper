@@ -95,11 +95,11 @@ def read_rows(database_name=db, table_name=table):
             print('SQLite Connection closed')
         return rows
 
-def read_specific_time_rows(database_name=db, table_name=table, weekday=0, hour=0, minute=0):
+def read_specific_time_rows(database_name=db, table_name=table, weekday=0, hour=0):
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
-        select_query = "SELECT * FROM %s WHERE weekday = %d AND hour = %d AND minute = %d" % (table_name, weekday, hour, minute)
+        select_query = "SELECT * FROM %s WHERE weekday = %d AND hour = %d" % (table_name, weekday, hour)
         rows = cursor.execute(select_query).fetchall()
         print(rows)
         cursor.close()
@@ -188,3 +188,20 @@ def read_hourly_averages_for_day(database_name=db, table_name=table, weekday=0):
             connection.close()
             print('SQLite Connection closed')
         return averages
+    
+def cleanup(database_name=db, table_name=table):
+    try:
+        connection = sqlite3.connect(database_name)
+        cursor = connection.cursor()
+        delete_query = "DELETE FROM %s WHERE percent_full = -1" % table_name
+        cursor.execute(delete_query)
+        connection.commit()
+        cursor.close()
+    
+    except sqlite3.Error as error:
+        print('Error occurred - ', error)
+
+    finally:
+        if connection:
+            connection.close()
+            print('SQLite Connection closed')
