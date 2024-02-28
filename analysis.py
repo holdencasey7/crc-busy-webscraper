@@ -3,6 +3,8 @@ import matplotlib.pyplot as plot
 import crcdb
 import datetime
 import calendar
+import argparse
+import sys
 
 def hourly_barchart_for_weekday(weekday=0):
     crcdb.cleanup()
@@ -65,6 +67,35 @@ def fixed_linechart_weekly_averages():
     plot.ylim(0,100)
     plot.show()
 
-# hourly_barchart_for_weekday(1)
-fixed_linechart_for_weekday(2)
-# fixed_linechart_weekly_averages()
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--plot", help="Plot Type")
+parser.add_argument("-d", "--weekday", help="Weekday 0-6", type=int)
+args = parser.parse_args()
+if args.weekday and ((args.weekday < 0) or (args.weekday) > 6):
+    print("Invalid Weekday. Must be [0,6]")
+    sys.exit("ERROR: Invalid Weekday")
+if (args.plot is None) or args.plot == "":
+    print("""Plot types -p:
+        hb for hourly barchart (need -d WEEKDAY)
+        fl for fixed linechart (need -d WEEKDAY)
+        dl for dynamic linechart (need -d WEEKDAY)
+        fla for fixed linechart weekly averages""")
+    sys.exit("ERROR: Invalid Plot Type")
+elif (args.plot == "hb"):
+    hourly_barchart_for_weekday(args.weekday)
+elif (args.plot == "fl"):
+    fixed_linechart_for_weekday(args.weekday)
+elif (args.plot == "dl"):
+    dynamic_linechart_for_weekday(args.weekday)
+elif (args.plot == "fla"):
+    fixed_linechart_weekly_averages()
+else:
+    print("Invalid Plot Type")
+    print("""Plot types -p:
+        hb for hourly barchart (need -d WEEKDAY)
+        fl for fixed linechart (need -d WEEKDAY)
+        dl for dynamic linechart (need -d WEEKDAY)
+        fla for fixed linechart weekly averages""")
+    sys.exit("ERROR: Invalid Plot Type")
+    
