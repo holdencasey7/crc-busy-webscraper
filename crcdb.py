@@ -83,7 +83,6 @@ def read_rows(database_name=db, table_name=table):
         cursor = connection.cursor()
         select_query = "SELECT * FROM %s" % table_name
         rows = cursor.execute(select_query).fetchall()
-        print(rows)
         cursor.close()
 
     except sqlite3.Error as error:
@@ -103,7 +102,6 @@ def read_specific_time_rows(database_name=db, table_name=table, weekday=0, hour=
         cursor = connection.cursor()
         select_query = "SELECT * FROM %s WHERE weekday = %d AND hour = %d" % (table_name, weekday, hour)
         rows = cursor.execute(select_query).fetchall()
-        print(rows)
         cursor.close()
 
     except sqlite3.Error as error:
@@ -123,7 +121,6 @@ def read_specific_day_rows(database_name=db, table_name=table, weekday=0):
         cursor = connection.cursor()
         select_query = "SELECT * FROM %s WHERE weekday = %d" % (table_name, weekday)
         rows = cursor.execute(select_query).fetchall()
-        print(rows)
         cursor.close()
 
     except sqlite3.Error as error:
@@ -143,7 +140,6 @@ def read_specific_day_average(database_name=db, table_name=table, weekday=0):
         cursor = connection.cursor()
         select_query = "SELECT AVG(percent_full) FROM %s WHERE weekday = %d" % (table_name, weekday)
         average = cursor.execute(select_query).fetchone()[0]
-        print(average)
         cursor.close()
 
     except sqlite3.Error as error:
@@ -163,7 +159,6 @@ def read_grouped_day_rows(database_name=db, table_name=table, weekday=0):
         cursor = connection.cursor()
         select_query = "SELECT weekday, hour, minute, AVG(percent_full) FROM %s WHERE weekday = %d GROUP BY hour, minute" % (table_name, weekday)
         rows = cursor.execute(select_query).fetchall()
-        print(rows)
         cursor.close()
 
     except sqlite3.Error as error:
@@ -183,7 +178,6 @@ def read_specific_day_and_hour_average(database_name=db, table_name=table, weekd
         cursor = connection.cursor()
         select_query = "SELECT AVG(percent_full) FROM %s WHERE weekday = %d AND hour = %d" % (table_name, weekday, hour)
         average = cursor.execute(select_query).fetchone()[0]
-        print(average)
         cursor.close()
 
     except sqlite3.Error as error:

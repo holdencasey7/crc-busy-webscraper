@@ -9,7 +9,9 @@ import sys
 def hourly_barchart_for_weekday(weekday=0):
     crcdb.cleanup()
     data = crcdb.read_hourly_averages_for_day(weekday=weekday)
-    print(data)
+    if len(data) <= 0:
+        print("No data for %s" % calendar.day_name[weekday])
+        return
     x_axis = list((entry[0] for entry in data))
     y_axis = list((entry[1] for entry in data))
     plot.bar(x_axis, y_axis)
@@ -22,6 +24,9 @@ def hourly_barchart_for_weekday(weekday=0):
 def dynamic_linechart_for_weekday(weekday=0):
     crcdb.cleanup()
     data = crcdb.read_grouped_day_rows(weekday=weekday)
+    if len(data) <= 0:
+        print("No data for %s" % calendar.day_name[weekday])
+        return
     x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
     y_axis = list(entry[3] for entry in data)
     plot.plot(x_axis, y_axis)
@@ -38,6 +43,9 @@ def dynamic_linechart_for_weekday(weekday=0):
 def fixed_linechart_for_weekday(weekday=0):
     crcdb.cleanup()
     data = crcdb.read_grouped_day_rows(weekday=weekday)
+    if len(data) <= 0:
+        print("No data for %s" % calendar.day_name[weekday])
+        return
     x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
     y_axis = list(entry[3] for entry in data)
     plot.plot(x_axis, y_axis)
@@ -54,6 +62,9 @@ def fixed_linechart_for_weekday(weekday=0):
 def fixed_linechart_weekly_averages():
     crcdb.cleanup()
     data = crcdb.read_grouped_rows()
+    if len(data) <= 0:
+        print("No data for")
+        return
     x_axis = list((datetime.datetime(2024, 1, day=entry[0], hour=entry[1], minute=entry[2]) for entry in data))
     y_axis = list(entry[3] for entry in data)
     plot.plot(x_axis, y_axis)
