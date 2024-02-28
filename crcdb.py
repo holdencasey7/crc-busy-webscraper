@@ -196,6 +196,25 @@ def read_specific_day_and_hour_average(database_name=db, table_name=table, weekd
             print('SQLite Connection closed')
         return average
 
+# Averages the data for all weekdays, grouped by weekday hour and minute
+def read_grouped_rows(database_name=db, table_name=table):
+    try:
+        connection = sqlite3.connect(database_name)
+        cursor = connection.cursor()
+        select_query = "SELECT weekday, hour, minute, AVG(percent_full) FROM %s GROUP BY weekday, hour, minute" % table_name
+        averages = cursor.execute(select_query).fetchall()
+        cursor.close()
+    
+    except sqlite3.Error as error:
+        print('Error occurred - ', error)
+        averages = []
+
+    finally:
+        if connection:
+            connection.close()
+            print('SQLite Connection closed')
+        return averages
+    
 # Reads the hourly averages for a day
 def read_hourly_averages_for_day(database_name=db, table_name=table, weekday=0):
     try:
