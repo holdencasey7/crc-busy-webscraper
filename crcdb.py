@@ -76,6 +76,7 @@ def insert_data(database_name=db, table_name=table, data=blank_data):
             connection.close()
             print('SQLite Connection closed')
 
+# Reads the entire table
 def read_rows(database_name=db, table_name=table):
     try:
         connection = sqlite3.connect(database_name)
@@ -95,6 +96,7 @@ def read_rows(database_name=db, table_name=table):
             print('SQLite Connection closed')
         return rows
 
+# Reads a specific day and hour
 def read_specific_time_rows(database_name=db, table_name=table, weekday=0, hour=0):
     try:
         connection = sqlite3.connect(database_name)
@@ -114,6 +116,7 @@ def read_specific_time_rows(database_name=db, table_name=table, weekday=0, hour=
             print('SQLite Connection closed')
         return rows
 
+# Reads a specific day
 def read_specific_day_rows(database_name=db, table_name=table, weekday=0):
     try:
         connection = sqlite3.connect(database_name)
@@ -133,6 +136,7 @@ def read_specific_day_rows(database_name=db, table_name=table, weekday=0):
             print('SQLite Connection closed')
         return rows
 
+# Gets the average for a specific day
 def read_specific_day_average(database_name=db, table_name=table, weekday=0):
     try:
         connection = sqlite3.connect(database_name)
@@ -152,6 +156,27 @@ def read_specific_day_average(database_name=db, table_name=table, weekday=0):
             print('SQLite Connection closed')
         return average
 
+# Reads a specific day and averages data in the same hour and minute
+def read_grouped_day_rows(database_name=db, table_name=table, weekday=0):
+    try:
+        connection = sqlite3.connect(database_name)
+        cursor = connection.cursor()
+        select_query = "SELECT weekday, hour, minute, AVG(percent_full) FROM %s WHERE weekday = %d GROUP BY hour, minute" % (table_name, weekday)
+        rows = cursor.execute(select_query).fetchall()
+        print(rows)
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print('Error occurred - ', error)
+        rows = []
+
+    finally:
+        if connection:
+            connection.close()
+            print('SQLite Connection closed')
+        return rows
+
+# Gets the average of a specific hour on a specific day
 def read_specific_day_and_hour_average(database_name=db, table_name=table, weekday=0, hour=0):
     try:
         connection = sqlite3.connect(database_name)
@@ -171,6 +196,7 @@ def read_specific_day_and_hour_average(database_name=db, table_name=table, weekd
             print('SQLite Connection closed')
         return average
 
+# Reads the hourly averages for a day
 def read_hourly_averages_for_day(database_name=db, table_name=table, weekday=0):
     try:
         connection = sqlite3.connect(database_name)
@@ -189,6 +215,7 @@ def read_hourly_averages_for_day(database_name=db, table_name=table, weekday=0):
             print('SQLite Connection closed')
         return averages
     
+# Cleans up data, removes invalid (-1) values
 def cleanup(database_name=db, table_name=table):
     try:
         connection = sqlite3.connect(database_name)
