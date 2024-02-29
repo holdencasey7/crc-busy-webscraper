@@ -159,10 +159,74 @@ def compare_weekday_to_average(weekday=0):
     plot.grid(axis='x')
     plot.xlabel("Time")
     plot.ylabel("Percent Full")
-    plot.title("Capacity Data Average")
+    plot.title("%s VS Average" % calendar.day_name[weekday])
     plot.ylim(0,100)
     plot.legend()
     plot.show()
+
+def compare_date_to_weekday(date, weekday=0):
+    crcdb.cleanup()
+    data = crcdb.read_grouped_weekday(weekday=weekday)
+    if len(data) <= 0:
+        print("No data for %s" % calendar.day_name[weekday])
+        return
+    x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
+    y_axis = list(entry[3] for entry in data)
+    x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].hour*60 + time[0].minute))
+    plot.plot(x_axis, y_axis, label=calendar.day_name[weekday])
+    data = crcdb.read_specific_date(date=date)
+    if len(data) <= 0:
+        print("No data for %s" % date)
+        return
+    x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
+    y_axis = list(entry[3] for entry in data)
+    x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].hour*60 + time[0].minute))
+    plot.plot(x_axis, y_axis, label=date)
+    pos = dates.HourLocator()
+    fmt = dates.DateFormatter("%H:%M")
+    plot.gca().xaxis.set(major_locator=pos, major_formatter=fmt)
+    plot.grid(axis='x')
+    plot.xlabel("Time")
+    plot.ylabel("Percent Full")
+    plot.title("%s VS %s" % (date, calendar.day_name[weekday]))
+    plot.ylim(0,100)
+    plot.legend()
+    plot.show()
+
+def compare_date_to_average(date):
+    crcdb.cleanup()
+    data = crcdb.read_grouped_rows()
+    if len(data) <= 0:
+        print("No data")
+        return
+    x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
+    y_axis = list(entry[3] for entry in data)
+    x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].hour*60 + time[0].minute))
+    plot.plot(x_axis, y_axis, label="Average")
+    data = crcdb.read_specific_date(date=date)
+    if len(data) <= 0:
+        print("No data for %s" % date)
+        return
+    x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
+    y_axis = list(entry[3] for entry in data)
+    x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].hour*60 + time[0].minute))
+    plot.plot(x_axis, y_axis, label=date)
+    pos = dates.HourLocator()
+    fmt = dates.DateFormatter("%H:%M")
+    plot.gca().xaxis.set(major_locator=pos, major_formatter=fmt)
+    plot.grid(axis='x')
+    plot.xlabel("Time")
+    plot.ylabel("Percent Full")
+    plot.title("%s VS Average" % date)
+    plot.ylim(0,100)
+    plot.legend()
+    plot.show()
+
+def compare_date_to_date():
+    return
+
+def compare_weekday_to_weekday():
+    return
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--plot", help="Plot Type")
@@ -181,7 +245,9 @@ if (args.plot is None) or args.plot == "":
         ifl for fixed linechart on a specific date (need -i)
         ow for overlayed weekdays
         ta for total average over all weekdays
-        cwd for compare weekday to average (need -d WEEKDAY)""")
+        cwa for compare weekday to average (need -d WEEKDAY)
+        cdw for compare date to weekday (need -i DATE -d WEEKDAY)
+        cda for compare date to average (need -i DATE)""")
     sys.exit("ERROR: Invalid Plot Type")
 elif (args.plot == "hb"):
     hourly_barchart_for_weekday(args.weekday)
@@ -197,8 +263,12 @@ elif (args.plot == "ow"):
     overlay_weekdays()
 elif (args.plot == "ta"):
     total_averages()
-elif (args.plot == "cwd"):
+elif (args.plot == "cwa"):
     compare_weekday_to_average(args.weekday)
+elif (args.plot == "cdw"):
+    compare_date_to_weekday(args.isodate, args.weekday)
+elif (args.plot == "cda"):
+    compare_date_to_average(args.isodate)
 else:
     print("Invalid Plot Type")
     print("""Plot types -p:
@@ -209,6 +279,8 @@ else:
         ifl for fixed linechart on a specific date (need -i)
         ow for overlayed weekdays
         ta for total average over all weekdays
-        cwd for compare weekday to average (need -d WEEKDAY)""")
+        cwa for compare weekday to average (need -d WEEKDAY)
+        cdw for compare date to weekday (need -i DATE -d WEEKDAY)
+        cda for compare date to average (need -i DATE)""")
     sys.exit("ERROR: Invalid Plot Type")
     
