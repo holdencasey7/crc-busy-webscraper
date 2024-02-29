@@ -1,9 +1,5 @@
 import threading
 import time
-import scrape
-import crcdb
-import datetime
-import schedule
 from datacollection import scrape_and_insert
 
 class Timer(threading.Thread):

@@ -28,8 +28,8 @@ def dynamic_linechart_for_weekday(weekday=0):
         print("No data for %s" % calendar.day_name[weekday])
         return
     x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
-    x_axis.sort(key= lambda time: time.hour*60 + time.minute)
     y_axis = list(entry[3] for entry in data)
+    x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].hour*60 + time[0].minute))
     plot.plot(x_axis, y_axis)
     pos = dates.HourLocator()
     fmt = dates.DateFormatter("%H:%M")
@@ -48,8 +48,8 @@ def fixed_linechart_for_weekday(weekday=0):
         print("No data for %s" % calendar.day_name[weekday])
         return
     x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
-    x_axis.sort(key= lambda time: time.hour*60 + time.minute)
     y_axis = list(entry[3] for entry in data)
+    x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].hour*60 + time[0].minute))
     plot.plot(x_axis, y_axis)
     pos = dates.HourLocator()
     fmt = dates.DateFormatter("%H:%M")
@@ -68,8 +68,8 @@ def fixed_linechart_weekly_averages():
         print("No data")
         return
     x_axis = list((datetime.datetime(2024, 1, day=entry[0], hour=entry[1], minute=entry[2]) for entry in data))
-    x_axis.sort(key= lambda time: time.hour*60 + time.minute)
     y_axis = list(entry[3] for entry in data)
+    x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].hour*60 + time[0].minute))
     plot.plot(x_axis, y_axis)
     pos = dates.HourLocator(interval=12)
     fmt = dates.DateFormatter("%d - Hour %H")
@@ -88,8 +88,8 @@ def fixed_linechart_date(date="2020-01-01"):
         print("No data for %s" % date)
         return
     x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
-    x_axis.sort(key= lambda time: time.hour*60 + time.minute)
     y_axis = list(entry[3] for entry in data)
+    x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].hour*60 + time[0].minute))
     plot.plot(x_axis, y_axis)
     pos = dates.HourLocator()
     fmt = dates.DateFormatter("%H:%M")
@@ -107,8 +107,8 @@ def overlay_weekdays():
         data = crcdb.read_grouped_weekday(weekday=i)
         if len(data) > 0:
             x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
-            x_axis.sort(key= lambda time: time.hour*60 + time.minute)
             y_axis = list(entry[3] for entry in data)
+            x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].hour*60 + time[0].minute))
             plot.plot(x_axis, y_axis, label = calendar.day_name[i])
     pos = dates.HourLocator()
     fmt = dates.DateFormatter("%H:%M")
@@ -125,8 +125,8 @@ def total_averages():
     crcdb.cleanup()
     data = crcdb.read_grouped_rows()
     x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
-    x_axis.sort(key= lambda time: time.hour*60 + time.minute)
     y_axis = list(entry[3] for entry in data)
+    x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].hour*60 + time[0].minute))
     plot.plot(x_axis, y_axis)
     pos = dates.HourLocator()
     fmt = dates.DateFormatter("%H:%M")
@@ -136,6 +136,32 @@ def total_averages():
     plot.ylabel("Percent Full")
     plot.title("Capacity Data Average")
     plot.ylim(0,100)
+    plot.show()
+
+def compare_weekday_to_average(weekday=0):
+    crcdb.cleanup()
+    data = crcdb.read_grouped_rows()
+    x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
+    y_axis = list(entry[3] for entry in data)
+    x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].hour*60 + time[0].minute))
+    plot.plot(x_axis, y_axis, label="Average")
+    data = crcdb.read_grouped_weekday(weekday=weekday)
+    if len(data) <= 0:
+        print("No data for %s" % calendar.day_name[weekday])
+        return
+    x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
+    y_axis = list(entry[3] for entry in data)
+    x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].hour*60 + time[0].minute))
+    plot.plot(x_axis, y_axis, label=calendar.day_name[weekday])
+    pos = dates.HourLocator()
+    fmt = dates.DateFormatter("%H:%M")
+    plot.gca().xaxis.set(major_locator=pos, major_formatter=fmt)
+    plot.grid(axis='x')
+    plot.xlabel("Time")
+    plot.ylabel("Percent Full")
+    plot.title("Capacity Data Average")
+    plot.ylim(0,100)
+    plot.legend()
     plot.show()
 
 parser = argparse.ArgumentParser()
@@ -152,9 +178,10 @@ if (args.plot is None) or args.plot == "":
         fl for fixed linechart (need -d WEEKDAY)
         dl for dynamic linechart (need -d WEEKDAY)
         fla for fixed linechart weekly averages
-        ifl for fixed linechart on a specific date (nned -i)
+        ifl for fixed linechart on a specific date (need -i)
         ow for overlayed weekdays
-        ta for total average over all weekdays""")
+        ta for total average over all weekdays
+        cwd for compare weekday to average (need -d WEEKDAY)""")
     sys.exit("ERROR: Invalid Plot Type")
 elif (args.plot == "hb"):
     hourly_barchart_for_weekday(args.weekday)
@@ -170,6 +197,8 @@ elif (args.plot == "ow"):
     overlay_weekdays()
 elif (args.plot == "ta"):
     total_averages()
+elif (args.plot == "cwd"):
+    compare_weekday_to_average(args.weekday)
 else:
     print("Invalid Plot Type")
     print("""Plot types -p:
@@ -177,8 +206,9 @@ else:
         fl for fixed linechart (need -d WEEKDAY)
         dl for dynamic linechart (need -d WEEKDAY)
         fla for fixed linechart weekly averages
-        ifl for fixed linechart on a specific date (nned -i)
+        ifl for fixed linechart on a specific date (need -i)
         ow for overlayed weekdays
-        ta for total average over all weekdays""")
+        ta for total average over all weekdays
+        cwd for compare weekday to average (need -d WEEKDAY)""")
     sys.exit("ERROR: Invalid Plot Type")
     
