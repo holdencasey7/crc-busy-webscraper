@@ -18,9 +18,6 @@ def collect(length=15):
     time.sleep(length)
     crc_timer.stop()
 
-    # Read the data
-    crcdb.read_rows()
-
 def scrape_and_insert():
     # Get Time
     now = datetime.datetime.now()
@@ -33,4 +30,5 @@ def scrape_and_insert():
         crcdb.insert_data(crcdb.db, crcdb.table, busy_object)
 
 if __name__ == "__main__":
-    collect(60*60*3)
+    while True:
+        collect(60*60*3)

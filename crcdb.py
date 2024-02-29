@@ -29,7 +29,7 @@ def create_db_and_drop(database_name=db, table_name=table):
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: CreateDBAndDrop')
 
 # Does not drop existing table if it already exists
 def initialize_db(database_name=db, table_name=table):
@@ -48,7 +48,7 @@ def initialize_db(database_name=db, table_name=table):
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: InitializeDB')
 
 """
 # Assume data is of the form
@@ -76,7 +76,7 @@ def insert_data(database_name=db, table_name=table, data=blank_data):
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: InsertData')
 
 def insert_data_mass(database_name=db, table_name=table, data_list=[]):
     try:
@@ -95,7 +95,7 @@ def insert_data_mass(database_name=db, table_name=table, data_list=[]):
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: InsertDataMass')
 
 # Reads the entire table
 def read_rows(database_name=db, table_name=table):
@@ -113,7 +113,7 @@ def read_rows(database_name=db, table_name=table):
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: ReadRows')
         return rows
 
 # Reads a specific weekday and hour
@@ -132,7 +132,7 @@ def read_specific_weekday_hour(database_name=db, table_name=table, weekday=0, ho
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: ReadSpecificWeekdayHour')
         return rows
 
 # Reads a specific day
@@ -151,7 +151,7 @@ def read_specific_weekday(database_name=db, table_name=table, weekday=0):
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: ReadSpecificWeekday')
         return rows
 
 # Gets the average for a specific day
@@ -170,7 +170,7 @@ def read_specific_weekday_average(database_name=db, table_name=table, weekday=0)
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: ReadSpecificWeekdayAverage')
         return average
 
 # Reads a specific day and averages data in the same hour and minute
@@ -189,7 +189,7 @@ def read_grouped_weekday(database_name=db, table_name=table, weekday=0):
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: ReadGroupedWeekday')
         return rows
 
 # Gets the average of a specific hour on a specific day
@@ -208,7 +208,7 @@ def read_specific_weekday_and_hour_average(database_name=db, table_name=table, w
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: ReadSpecificWeekdayAndHourAverage')
         return average
 
 # Averages the data for all weekdays, grouped by weekday hour and minute
@@ -227,7 +227,7 @@ def read_grouped_rows(database_name=db, table_name=table):
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: ReadGroupedRows')
         return averages
     
 # Reads the hourly averages for a day
@@ -246,7 +246,7 @@ def read_hourly_averages_for_weekday(database_name=db, table_name=table, weekday
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: ReadHourlyAveragesForWeekday')
         return averages
     
 def read_specific_date(database_name=db, table_name=table, date='2020-01-01'):
@@ -264,7 +264,7 @@ def read_specific_date(database_name=db, table_name=table, date='2020-01-01'):
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: ReadSpecificDate')
         return rows
     
 def read_specific_date_average(database_name=db, table_name=table, date='2020-01-01'):
@@ -282,7 +282,7 @@ def read_specific_date_average(database_name=db, table_name=table, date='2020-01
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: ReadSpecificDateAverage')
         return average
     
 # Cleans up data, removes invalid (-1) values
@@ -301,4 +301,4 @@ def cleanup(database_name=db, table_name=table):
     finally:
         if connection:
             connection.close()
-            print('SQLite Connection closed')
+            print('SQLite Connection closed: Cleanup')
