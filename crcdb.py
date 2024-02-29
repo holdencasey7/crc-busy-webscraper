@@ -249,6 +249,42 @@ def read_hourly_averages_for_weekday(database_name=db, table_name=table, weekday
             print('SQLite Connection closed')
         return averages
     
+def read_specific_date(database_name=db, table_name=table, date='2020-01-01'):
+    try:
+        connection = sqlite3.connect(database_name)
+        cursor = connection.cursor()
+        select_query = """SELECT * FROM %s WHERE isodate = "%s" """ % (table_name, date)
+        rows = cursor.execute(select_query).fetchall()
+        cursor.close()
+    
+    except sqlite3.Error as error:
+        print('Error occurred - ', error)
+        rows = []
+
+    finally:
+        if connection:
+            connection.close()
+            print('SQLite Connection closed')
+        return rows
+    
+def read_specific_date_average(database_name=db, table_name=table, date='2020-01-01'):
+    try:
+        connection = sqlite3.connect(database_name)
+        cursor = connection.cursor()
+        select_query = """SELECT AVG(percent_full) FROM %s WHERE isodate = "%s" GROUP BY weekday""" % (table_name, date)
+        average = cursor.execute(select_query).fetchone()[0]
+        cursor.close()
+    
+    except sqlite3.Error as error:
+        print('Error occurred - ', error)
+        average = -1
+
+    finally:
+        if connection:
+            connection.close()
+            print('SQLite Connection closed')
+        return average
+    
 # Cleans up data, removes invalid (-1) values
 def cleanup(database_name=db, table_name=table):
     try:

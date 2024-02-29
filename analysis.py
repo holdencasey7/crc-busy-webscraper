@@ -63,7 +63,7 @@ def fixed_linechart_weekly_averages():
     crcdb.cleanup()
     data = crcdb.read_grouped_rows()
     if len(data) <= 0:
-        print("No data for")
+        print("No data")
         return
     x_axis = list((datetime.datetime(2024, 1, day=entry[0], hour=entry[1], minute=entry[2]) for entry in data))
     y_axis = list(entry[3] for entry in data)
@@ -78,10 +78,29 @@ def fixed_linechart_weekly_averages():
     plot.ylim(0,100)
     plot.show()
 
+def fixed_linechart_date(date="2020-01-01"):
+    crcdb.cleanup()
+    data = crcdb.read_specific_date(date=date)
+    if len(data) <= 0:
+        print("No data for %s" % date)
+        return
+    x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
+    y_axis = list(entry[3] for entry in data)
+    plot.plot(x_axis, y_axis)
+    pos = dates.HourLocator()
+    fmt = dates.DateFormatter("%H:%M")
+    plot.gca().xaxis.set(major_locator=pos, major_formatter=fmt)
+    plot.grid(axis='x')
+    plot.xlabel("Time")
+    plot.ylabel("Percent Full")
+    plot.title("Capacity Data for %s" % date)
+    plot.ylim(0,100)
+    plot.show()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--plot", help="Plot Type")
 parser.add_argument("-d", "--weekday", help="Weekday 0-6", type=int)
+parser.add_argument("-i", "--isodate", help="YYYY-MM-DD", type=str)
 args = parser.parse_args()
 if args.weekday and ((args.weekday < 0) or (args.weekday) > 6):
     print("Invalid Weekday. Must be [0,6]")
@@ -91,7 +110,8 @@ if (args.plot is None) or args.plot == "":
         hb for hourly barchart (need -d WEEKDAY)
         fl for fixed linechart (need -d WEEKDAY)
         dl for dynamic linechart (need -d WEEKDAY)
-        fla for fixed linechart weekly averages""")
+        fla for fixed linechart weekly averages
+        ifl for fixed linechart on a specific date (nned -i)""")
     sys.exit("ERROR: Invalid Plot Type")
 elif (args.plot == "hb"):
     hourly_barchart_for_weekday(args.weekday)
@@ -101,12 +121,15 @@ elif (args.plot == "dl"):
     dynamic_linechart_for_weekday(args.weekday)
 elif (args.plot == "fla"):
     fixed_linechart_weekly_averages()
+elif (args.plot == "ifl"):
+    fixed_linechart_date(args.isodate)
 else:
     print("Invalid Plot Type")
     print("""Plot types -p:
         hb for hourly barchart (need -d WEEKDAY)
         fl for fixed linechart (need -d WEEKDAY)
         dl for dynamic linechart (need -d WEEKDAY)
-        fla for fixed linechart weekly averages""")
+        fla for fixed linechart weekly averages
+        ifl for fixed linechart on a specific date (nned -i)""")
     sys.exit("ERROR: Invalid Plot Type")
     
