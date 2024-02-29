@@ -40,8 +40,9 @@ def get_busy_object():
     busy_at_time = {
         "weekday": current_time.weekday(),
         "hour": current_time.hour,
-        "minutes": current_time.minute,
-        "busy": integer_busy
+        "minute": current_time.minute,
+        "busy": integer_busy,
+        "isodate": current_time.strftime('%Y-%m-%d')
     }
     print(busy_at_time)
     return busy_at_time

@@ -1,12 +1,13 @@
 import sqlite3
 
 db = "crc.db"
-table = "busy"
+table = "busy_new"
 blank_data = {
     "weekday": -1,
     "hour": -1,
-    "minutes": -1,
-    "busy": -1
+    "minute": -1,
+    "busy": -1,
+    "isodate": '2020-01-01'
 }
 
 # Only use this once as it drops the existing table
@@ -16,7 +17,7 @@ def create_db_and_drop(database_name=db, table_name=table):
         cursor = connection.cursor()
         drop_if_exists_query = "DROP TABLE IF EXISTS %s" % (table_name)
         cursor.execute(drop_if_exists_query)
-        create_table_query = "CREATE TABLE %s (weekday INTEGER, hour INTEGER, minute INTEGER, percent_full INTEGER)" % (table_name)
+        create_table_query = "CREATE TABLE %s (weekday INTEGER, hour INTEGER, minute INTEGER, percent_full INTEGER, isodate VARCHAR(11))" % (table_name)
         cursor.execute(create_table_query)
         connection.commit()
         cursor.close()
@@ -35,7 +36,7 @@ def initialize_db(database_name=db, table_name=table):
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
-        create_table_query = "CREATE TABLE %s (weekday INTEGER, hour INTEGER, minute INTEGER, percent_full INTEGER)" % (table_name)
+        create_table_query = "CREATE TABLE %s (weekday INTEGER, hour INTEGER, minute INTEGER, percent_full INTEGER, isodate VARCHAR(11))" % (table_name)
         cursor.execute(create_table_query)
         connection.commit()
         cursor.close()
@@ -52,19 +53,39 @@ def initialize_db(database_name=db, table_name=table):
 """
 # Assume data is of the form
     busy_at_time = {
-        "weekday": current_time.weekday(),
-        "hour": current_time.hour,
-        "minutes": current_time.minute,
-        "busy": integer_busy
+        "weekday": 1,
+        "hour": 13,
+        "minute": 54,
+        "busy": 38,
+        "isodate": '2024-01-01',
     }
 """
 def insert_data(database_name=db, table_name=table, data=blank_data):
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
-        weekday, hour, minutes, busy = data.values()
-        insert_data_query = "INSERT INTO %s VALUES (%d, %d, %d, %d)" % (table_name, weekday, hour, minutes, busy)
+        weekday, hour, minute, busy, isodate = data.values()
+        insert_data_query = """INSERT INTO %s VALUES (%d, %d, %d, %d, "%s")""" % (table_name, weekday, hour, minute, busy, str(isodate))
         cursor.execute(insert_data_query)
+        connection.commit()
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print('Error occurred - ', error)
+
+    finally:
+        if connection:
+            connection.close()
+            print('SQLite Connection closed')
+
+def insert_data_mass(database_name=db, table_name=table, data_list=[]):
+    try:
+        connection = sqlite3.connect(database_name)
+        cursor = connection.cursor()
+        for data in data_list:
+            weekday, hour, minute, busy, isodate = data.values()
+            insert_data_query = """INSERT INTO %s VALUES (%d, %d, %d, %d, "%s")""" % (table_name, weekday, hour, minute, busy, str(isodate))
+            cursor.execute(insert_data_query)
         connection.commit()
         cursor.close()
 
@@ -95,8 +116,8 @@ def read_rows(database_name=db, table_name=table):
             print('SQLite Connection closed')
         return rows
 
-# Reads a specific day and hour
-def read_specific_time_rows(database_name=db, table_name=table, weekday=0, hour=0):
+# Reads a specific weekday and hour
+def read_specific_weekday_hour(database_name=db, table_name=table, weekday=0, hour=0):
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -115,7 +136,7 @@ def read_specific_time_rows(database_name=db, table_name=table, weekday=0, hour=
         return rows
 
 # Reads a specific day
-def read_specific_day_rows(database_name=db, table_name=table, weekday=0):
+def read_specific_weekday(database_name=db, table_name=table, weekday=0):
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -134,7 +155,7 @@ def read_specific_day_rows(database_name=db, table_name=table, weekday=0):
         return rows
 
 # Gets the average for a specific day
-def read_specific_day_average(database_name=db, table_name=table, weekday=0):
+def read_specific_weekday_average(database_name=db, table_name=table, weekday=0):
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -153,7 +174,7 @@ def read_specific_day_average(database_name=db, table_name=table, weekday=0):
         return average
 
 # Reads a specific day and averages data in the same hour and minute
-def read_grouped_day_rows(database_name=db, table_name=table, weekday=0):
+def read_grouped_weekday(database_name=db, table_name=table, weekday=0):
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -172,7 +193,7 @@ def read_grouped_day_rows(database_name=db, table_name=table, weekday=0):
         return rows
 
 # Gets the average of a specific hour on a specific day
-def read_specific_day_and_hour_average(database_name=db, table_name=table, weekday=0, hour=0):
+def read_specific_weekday_and_hour_average(database_name=db, table_name=table, weekday=0, hour=0):
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -210,7 +231,7 @@ def read_grouped_rows(database_name=db, table_name=table):
         return averages
     
 # Reads the hourly averages for a day
-def read_hourly_averages_for_day(database_name=db, table_name=table, weekday=0):
+def read_hourly_averages_for_weekday(database_name=db, table_name=table, weekday=0):
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
