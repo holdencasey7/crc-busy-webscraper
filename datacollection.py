@@ -2,6 +2,8 @@ import scrape
 import crcdb
 import crctimer
 import time
+import datetime
+import schedule
 
 def collect_without_existing_db(length=15):
     # Create db and drop tables if exist
@@ -19,7 +21,16 @@ def collect(length=15):
     # Read the data
     crcdb.read_rows()
 
+def scrape_and_insert():
+    # Get Time
+    now = datetime.datetime.now()
 
+    # If open, collect data
+    if schedule.is_crc_open_typical(now):
+        # Scrape CRC site
+        busy_object = scrape.get_busy_object(now)
+        # Insert the data
+        crcdb.insert_data(crcdb.db, crcdb.table, busy_object)
 
 if __name__ == "__main__":
     collect(60*60*3)

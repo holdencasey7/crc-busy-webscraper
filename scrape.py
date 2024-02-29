@@ -7,7 +7,7 @@ import datetime
 # CRC Website for Wait Times
 url = "https://live.waitz.io/4vxie66a29ct"
 
-def get_busy_object():
+def get_busy_object(now=datetime.datetime.now()):
     # Use Selenium to scrape the page once it has fully loaded
     driver = webdriver.Firefox()
     driver.get(url)
@@ -21,7 +21,7 @@ def get_busy_object():
         fitness_center_busy_element = driver.find_elements(By.TAG_NAME, 'p')[1]
     except:
         valid = False
-        print("Error: most likely the page never loaded or the class name changed")
+        print("Error: most likely the page never loaded or the page structure changed")
     finally:
         if valid:
             fitness_center_busy_string = str(fitness_center_busy_element.get_attribute('innerHTML'))
@@ -34,7 +34,7 @@ def get_busy_object():
             integer_busy = -1
 
         driver.quit()
-        current_time = datetime.datetime.now()
+        current_time = now
 
     # Combine current time and busy into single object
     busy_at_time = {

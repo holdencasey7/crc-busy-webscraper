@@ -2,6 +2,9 @@ import threading
 import time
 import scrape
 import crcdb
+import datetime
+import schedule
+from datacollection import scrape_and_insert
 
 class Timer(threading.Thread):
 
@@ -23,11 +26,3 @@ class CRC_Timer(Timer):
     interval = 60*5
     def timer(self):
         scrape_and_insert()
-
-
-def scrape_and_insert():
-    # Scrape CRC site
-    busy_object = scrape.get_busy_object()
-
-    # Insert the data
-    crcdb.insert_data(crcdb.db, crcdb.table, busy_object)
