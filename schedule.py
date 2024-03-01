@@ -16,7 +16,7 @@ def is_crc_open_typical(now=datetime.datetime.now()):
         # Friday
         if hour == 5 and minute <= 30:
             open = False
-        elif hour < 5 or hour >= 9:
+        elif hour < 5 or hour >= 21:
             open = False
     elif weekday == 5:
         # Saturday
