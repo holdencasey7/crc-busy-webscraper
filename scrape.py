@@ -6,7 +6,7 @@ import datetime
 
 # CRC Website for Wait Times
 url = "https://live.waitz.io/4vxie66a29ct"
-seen_classes = ["css-1tglk97"]
+seen_classes = ["css-1tglk97", "css-1qumdbr"]
 
 def get_busy_object(now=datetime.datetime.now()):
     # Use Selenium to scrape the page once it has fully loaded
