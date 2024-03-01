@@ -19,6 +19,10 @@ def get_busy_object(now=datetime.datetime.now()):
             EC.presence_of_element_located((By.TAG_NAME, "h2"))
         )
         # Will work so long as structure remains the same
+        fitness_center_closed_element = driver.find_elements(By.TAG_NAME, 'p')[0]
+        if str(fitness_center_closed_element.get_attribute('innerHTML')).split(" ")[0] == "Closed":
+            print("Detected Close")
+            valid = False
         fitness_center_busy_element = driver.find_elements(By.TAG_NAME, 'p')[1]
     except:
         valid = False

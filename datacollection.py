@@ -28,6 +28,8 @@ def scrape_and_insert():
         busy_object = scrape.get_busy_object(now)
         # Insert the data
         crcdb.insert_data(crcdb.db, crcdb.table, busy_object)
+    else:
+        print("Scheduled Close")
 
 if __name__ == "__main__":
     while True:

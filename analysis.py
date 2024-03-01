@@ -69,7 +69,7 @@ def fixed_linechart_weekly_averages():
         return
     x_axis = list((datetime.datetime(2024, 1, day=entry[0], hour=entry[1], minute=entry[2]) for entry in data))
     y_axis = list(entry[3] for entry in data)
-    x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].hour*60 + time[0].minute))
+    x_axis, y_axis = zip(*sorted(zip(x_axis, y_axis), key=lambda time: time[0].day*60*24 + time[0].hour*60 + time[0].minute))
     plot.plot(x_axis, y_axis)
     pos = dates.HourLocator(interval=12)
     fmt = dates.DateFormatter("%d - Hour %H")
@@ -284,13 +284,13 @@ helper_string = """Plot types -p:
     fl for fixed linechart (need -d WEEKDAY)
     dl for dynamic linechart (need -d WEEKDAY)
     fla for fixed linechart weekly averages
-    ifl for fixed linechart on a specific date (need -i)
+    ifl for fixed linechart on a specific date (need -i YYYY-MM-DD)
     ow for overlayed weekdays fixed
     owd for overlayed weekdays dynamic
     ta for total average over all weekdays
     cwa for compare weekday to average (need -d WEEKDAY)
-    cdw for compare date to weekday (need -i DATE -d WEEKDAY)
-    cda for compare date to average (need -i DATE)
+    cdw for compare date to weekday (need -i YYYY-MM-DD -d WEEKDAY)
+    cda for compare date to average (need -i YYYY-MM-DD)
     cdd for compare weekday to weekday (need -d WEEKDAY1 -sd WEEKDAY2)"""
 
 if args.weekday and ((args.weekday < 0) or (args.weekday) > 6):
