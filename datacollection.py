@@ -18,6 +18,10 @@ def collect(length=15):
     time.sleep(length)
     crc_timer.stop()
 
+def collect_forever():
+    crc_timer = crctimer.CRC_Timer()
+    crc_timer.start()
+
 def scrape_and_insert():
     # Get Time
     now = datetime.datetime.now()
@@ -32,5 +36,4 @@ def scrape_and_insert():
         print("Scheduled Close")
 
 if __name__ == "__main__":
-    while True:
-        collect(60*60*3)
+    collect_forever()
