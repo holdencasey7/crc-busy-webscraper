@@ -24,9 +24,10 @@ def get_busy_object(now=datetime.datetime.now()):
             print("Detected Close")
             valid = False
         fitness_center_busy_element = driver.find_elements(By.TAG_NAME, 'p')[1]
-    except:
+    except Exception as error:
         valid = False
         print("Error: most likely the page never loaded or the page structure changed")
+        print(error)
     finally:
         if valid:
             fitness_center_busy_string = str(fitness_center_busy_element.get_attribute('innerHTML'))
