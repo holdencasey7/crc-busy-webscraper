@@ -2,20 +2,26 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.options import Options
 import datetime
 
 # CRC Website for Wait Times
 url = "https://live.waitz.io/4vxie66a29ct"
 seen_classes = ["css-1tglk97", "css-1qumdbr"]
+path = "/usr/local/bin/geckodriver"
+options = Options()
+options.add_argument("--headless")
 
 def get_busy_object(now=datetime.datetime.now()):
     # Use Selenium to scrape the page once it has fully loaded
-    driver = webdriver.Firefox()
+    driver = webdriver.Firefox(options=options) #, service=Service(path))
+    print("Headless Firefox Loaded")
     driver.get(url)
     valid = True
     try:
         # Have to do this because they randomize class names
-        wait_till_loaded = WebDriverWait(driver, 10).until(
+        wait_till_loaded = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.TAG_NAME, "h2"))
         )
         # Will work so long as structure remains the same
