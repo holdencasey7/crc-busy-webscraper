@@ -15,7 +15,7 @@ options.add_argument("--headless")
 
 def get_busy_object(now=datetime.datetime.now()):
     # Use Selenium to scrape the page once it has fully loaded
-    driver = webdriver.Firefox(options=options) #, service=Service(path))
+    driver = webdriver.Firefox(options=options, service=Service(path))
     print("Headless Firefox Loaded")
     driver.get(url)
     valid = True
