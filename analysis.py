@@ -5,6 +5,13 @@ import datetime
 import calendar
 import argparse
 import sys
+from enum import Enum
+
+class ChartTypes(Enum):
+    WEEKDAY_FIXED_LINE = "fl"
+    DATE_FIXED_LINE = "ifl"
+    OVERLAYED_WEEKDAYS_FIXED_LINE = "ow"
+    TOTAL_AVERAGES = "ta"
 
 def hourly_barchart_for_weekday(weekday=0):
     crcdb.cleanup()
@@ -41,8 +48,9 @@ def dynamic_linechart_for_weekday(weekday=0):
     plot.show()
 
 # Y axis fixed to 0-100
-def fixed_linechart_for_weekday(weekday=0):
+def fixed_linechart_for_weekday(weekday=0, show=False):
     crcdb.cleanup()
+    plot.rcParams['figure.figsize'] = [12, 5]
     data = crcdb.read_grouped_weekday(weekday=weekday)
     if len(data) <= 0:
         print("No data for %s" % calendar.day_name[weekday])
@@ -59,7 +67,12 @@ def fixed_linechart_for_weekday(weekday=0):
     plot.ylabel("Percent Full")
     plot.title("Capacity Data for %s" % calendar.day_name[weekday])
     plot.ylim(0,100)
-    plot.show()
+    filename = f"fl-{weekday}.png"
+    plot.savefig(filename)
+    if show:
+        plot.show()
+    return filename
+    # plot.show()
 
 def fixed_linechart_weekly_averages():
     crcdb.cleanup()
@@ -81,8 +94,9 @@ def fixed_linechart_weekly_averages():
     plot.ylim(0,100)
     plot.show()
 
-def fixed_linechart_date(date="2020-01-01"):
+def fixed_linechart_date(date="2020-01-01", show=False):
     crcdb.cleanup()
+    plot.rcParams['figure.figsize'] = [12, 5]
     data = crcdb.read_specific_date(date=date)
     if len(data) <= 0:
         print("No data for %s" % date)
@@ -99,9 +113,14 @@ def fixed_linechart_date(date="2020-01-01"):
     plot.ylabel("Percent Full")
     plot.title("Capacity Data for %s" % date)
     plot.ylim(0,100)
-    plot.show()
+    filename = f"ifl-{date}.png"
+    plot.savefig(filename)
+    if show:
+        plot.show()
+    return filename
+    # plot.show()
 
-def overlay_weekdays():
+def overlay_weekdays(show=False):
     crcdb.cleanup()
     plot.rcParams['figure.figsize'] = [12, 5]
     for i in range(0,7):
@@ -120,8 +139,12 @@ def overlay_weekdays():
     plot.title("Capacity Data Overlay")
     plot.ylim(0,100)
     plot.legend()
-    plot.savefig("ow.png")
-    plot.show()
+    filename = "ow.png"
+    plot.savefig(filename)
+    if show:
+        plot.show()
+    return filename
+    # plot.show()
 
 def overlay_weekdays_dynamic():
     crcdb.cleanup()
@@ -142,8 +165,9 @@ def overlay_weekdays_dynamic():
     plot.legend()
     plot.show()
 
-def total_averages():
+def total_averages(show=False):
     crcdb.cleanup()
+    plot.rcParams['figure.figsize'] = [12, 5]
     data = crcdb.read_grouped_rows()
     x_axis = list((datetime.datetime(2024, 1, 1, hour=entry[1], minute=entry[2]) for entry in data))
     y_axis = list(entry[3] for entry in data)
@@ -157,7 +181,11 @@ def total_averages():
     plot.ylabel("Percent Full")
     plot.title("Capacity Data Average")
     plot.ylim(0,100)
-    plot.show()
+    filename = "ta.png"
+    plot.savefig(filename)
+    if show:
+        plot.show()
+    return filename
 
 def compare_weekday_to_average(weekday=0):
     crcdb.cleanup()
