@@ -1,6 +1,6 @@
 # CRC Busy Tracker
 
-Personal project to record how busy the GaTech campus gym is at various times throughout the day.
+The CRC Busy Tracker is a personal project that records how busy the GaTech Campus Recreation Center is at various times throughout the day.
 Uses live capacity data from https://live.waitz.io/4vxie66a29ct .
 This project is currently operating on a Raspberry Pi 4 Model B running Raspberry Pi OS, but was tested on a local machine.
 
@@ -17,7 +17,7 @@ pip install -r requirements.txt
 
 ### scrape.py
 
-The webscraping portion. Uses selenium.
+The webscraping portion. Uses selenium. The mainfloor gym is the only section currently being tracked, although more sections (primarily the 4th floor courts) could be tracked in the future.
 
 **get_busy_object(now)**:
 Scrapes the live capacity data using Firefox WebDriver and returns the percent full, along with time data, in a single object.
