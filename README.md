@@ -75,8 +75,8 @@ Plot types -p:
 
 ### upload.py
 
-The uploading portion. Uses Google Drive API to upload plots created in analysis.py to a folder in Google Drive.
-Authentication must be performed and is obvsiouly not included in the GitHub files.  
+The uploading portion. Uses Google Drive API to upload plots created in analysis.py to a folder in Google Drive. File names correspond to plot flag arguments listed above.  
+Authentication must be performed manually and is obvsiouly not included in the GitHub files.  
 Hint: files needed include
 
 - settings.yaml
