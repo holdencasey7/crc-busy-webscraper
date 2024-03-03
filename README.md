@@ -2,7 +2,8 @@
 
 The CRC Busy Tracker is a personal project that records how busy the GaTech Campus Recreation Center is at various times throughout the day.  
 Uses live capacity data from https://live.waitz.io/4vxie66a29ct  
-This project is currently operating on a Raspberry Pi 4 Model B running Raspberry Pi OS, but was tested on a local machine.
+This project is currently operating on a Raspberry Pi 4 Model B running Raspberry Pi OS, but was tested on a local machine.  
+Data plots can be viewed at https://drive.google.com/drive/folders/1zZjkRWWPLLI5-Xqet1RpJ1NwtgSfUV6s
 
 ## Dependencies
 
@@ -82,7 +83,8 @@ Hint: files needed include
 - credentials.json
 - token.json
 
-This portion is currently under construction. The goal is to have images uploaded automatically nightly, as opposed to manually.
+This portion is currently under construction. The goal is to have images uploaded automatically nightly, as opposed to manually.  
+View data plots at https://drive.google.com/drive/folders/1zZjkRWWPLLI5-Xqet1RpJ1NwtgSfUV6s
 
 ## Non-Included Files
 
