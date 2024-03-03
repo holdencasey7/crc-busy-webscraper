@@ -12,6 +12,9 @@ blank_data = {
 
 # Only use this once as it drops the existing table
 def create_db_and_drop(database_name=db, table_name=table):
+    """Creates a new database with a table configured to hold data from scrape.py -> get_busy_object().
+    If the table already exists, it will be dropped and re-created."""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -31,8 +34,10 @@ def create_db_and_drop(database_name=db, table_name=table):
             connection.close()
             print('SQLite Connection closed: CreateDBAndDrop')
 
-# Does not drop existing table if it already exists
 def initialize_db(database_name=db, table_name=table):
+    """Same as create_db_and_drop() but does not check if table exists already.
+    Does not drop existing table."""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -50,17 +55,17 @@ def initialize_db(database_name=db, table_name=table):
             connection.close()
             print('SQLite Connection closed: InitializeDB')
 
-"""
-# Assume data is of the form
+def insert_data(database_name=db, table_name=table, data=blank_data):
+    """Inserts data into the given table. Assumes data is of the form from scrape.py -> get_busy_object().\n
+    Assume data is of the form:\n
     busy_at_time = {
         "weekday": 1,
         "hour": 13,
         "minute": 54,
         "busy": 38,
         "isodate": '2024-01-01',
-    }
-"""
-def insert_data(database_name=db, table_name=table, data=blank_data):
+    }"""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -79,6 +84,8 @@ def insert_data(database_name=db, table_name=table, data=blank_data):
             print('SQLite Connection closed: InsertData')
 
 def insert_data_mass(database_name=db, table_name=table, data_list=[]):
+    """Inserts multiple items at a time in a single sqlite connection."""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -97,8 +104,9 @@ def insert_data_mass(database_name=db, table_name=table, data_list=[]):
             connection.close()
             print('SQLite Connection closed: InsertDataMass')
 
-# Reads the entire table
 def read_rows(database_name=db, table_name=table):
+    """Returns a list of the rows of a table."""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -116,8 +124,9 @@ def read_rows(database_name=db, table_name=table):
             print('SQLite Connection closed: ReadRows')
         return rows
 
-# Reads a specific weekday and hour
 def read_specific_weekday_hour(database_name=db, table_name=table, weekday=0, hour=0):
+    """Returns rows with specific weekday and hour"""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -135,8 +144,9 @@ def read_specific_weekday_hour(database_name=db, table_name=table, weekday=0, ho
             print('SQLite Connection closed: ReadSpecificWeekdayHour')
         return rows
 
-# Reads a specific day
 def read_specific_weekday(database_name=db, table_name=table, weekday=0):
+    """Returns rows with specific weekday"""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -154,8 +164,9 @@ def read_specific_weekday(database_name=db, table_name=table, weekday=0):
             print('SQLite Connection closed: ReadSpecificWeekday')
         return rows
 
-# Gets the average for a specific day
 def read_specific_weekday_average(database_name=db, table_name=table, weekday=0):
+    """Returns average for a specific weekday"""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -173,8 +184,9 @@ def read_specific_weekday_average(database_name=db, table_name=table, weekday=0)
             print('SQLite Connection closed: ReadSpecificWeekdayAverage')
         return average
 
-# Reads a specific day and averages data in the same hour and minute
 def read_grouped_weekday(database_name=db, table_name=table, weekday=0):
+    """Returns rows with a specific weekday, where entries with the same hour and minute will be averaged."""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -192,8 +204,9 @@ def read_grouped_weekday(database_name=db, table_name=table, weekday=0):
             print('SQLite Connection closed: ReadGroupedWeekday')
         return rows
 
-# Gets the average of a specific hour on a specific day
 def read_specific_weekday_and_hour_average(database_name=db, table_name=table, weekday=0, hour=0):
+    """Returns the average of a specific weekday and hour"""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -211,8 +224,9 @@ def read_specific_weekday_and_hour_average(database_name=db, table_name=table, w
             print('SQLite Connection closed: ReadSpecificWeekdayAndHourAverage')
         return average
 
-# Averages the data for all weekdays, grouped by weekday hour and minute
 def read_grouped_rows(database_name=db, table_name=table):
+    """Returns all rows where elements with the same weekday, hour, and minute are averaged"""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -230,8 +244,9 @@ def read_grouped_rows(database_name=db, table_name=table):
             print('SQLite Connection closed: ReadGroupedRows')
         return averages
     
-# Reads the hourly averages for a day
 def read_hourly_averages_for_weekday(database_name=db, table_name=table, weekday=0):
+    """Returns rows of the hourly averages for a specific weekday"""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -250,6 +265,8 @@ def read_hourly_averages_for_weekday(database_name=db, table_name=table, weekday
         return averages
     
 def read_specific_date(database_name=db, table_name=table, date='2020-01-01'):
+    """Returns rows with a specific date"""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -268,6 +285,8 @@ def read_specific_date(database_name=db, table_name=table, date='2020-01-01'):
         return rows
     
 def read_specific_date_average(database_name=db, table_name=table, date='2020-01-01'):
+    """Returns the average from a specific date"""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()
@@ -285,8 +304,9 @@ def read_specific_date_average(database_name=db, table_name=table, date='2020-01
             print('SQLite Connection closed: ReadSpecificDateAverage')
         return average
     
-# Cleans up data, removes invalid (-1) values
 def cleanup(database_name=db, table_name=table):
+    """Removes invalid percent_full values. Typically introduced when CRC is detected closed or when unable to load website."""
+
     try:
         connection = sqlite3.connect(database_name)
         cursor = connection.cursor()

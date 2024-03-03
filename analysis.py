@@ -7,7 +7,7 @@ import argparse
 import sys
 from enum import Enum
 
-class ChartTypes(Enum):
+class PlotTypes(Enum):
     WEEKDAY_FIXED_LINE = "fl"
     DATE_FIXED_LINE = "ifl"
     OVERLAYED_WEEKDAYS_FIXED_LINE = "ow"
@@ -26,8 +26,7 @@ def hourly_barchart_for_weekday(weekday=0):
     plot.ylabel("Percent Full")
     plot.title("Hourly Averages for %s" % calendar.day_name[weekday])
     plot.show()
-
-# Y axis will be min data - max data   
+ 
 def dynamic_linechart_for_weekday(weekday=0):
     crcdb.cleanup()
     data = crcdb.read_grouped_weekday(weekday=weekday)
@@ -47,7 +46,6 @@ def dynamic_linechart_for_weekday(weekday=0):
     plot.title("Capacity Data for %s" % calendar.day_name[weekday])
     plot.show()
 
-# Y axis fixed to 0-100
 def fixed_linechart_for_weekday(weekday=0, show=False):
     crcdb.cleanup()
     plot.rcParams['figure.figsize'] = [12, 5]
@@ -333,17 +331,17 @@ def main():
     elif (args.plot == "hb"):
         hourly_barchart_for_weekday(args.weekday)
     elif (args.plot == "fl"):
-        fixed_linechart_for_weekday(args.weekday)
+        fixed_linechart_for_weekday(args.weekday, show=True)
     elif (args.plot == "dl"):
         dynamic_linechart_for_weekday(args.weekday)
     elif (args.plot == "fla"):
         fixed_linechart_weekly_averages()
     elif (args.plot == "ifl"):
-        fixed_linechart_date(args.isodate)
+        fixed_linechart_date(args.isodate, show=True)
     elif (args.plot == "ow"):
-        overlay_weekdays()
+        overlay_weekdays(show=True)
     elif (args.plot == "ta"):
-        total_averages()
+        total_averages(show=True)
     elif (args.plot == "cwa"):
         compare_weekday_to_average(args.weekday)
     elif (args.plot == "cdw"):

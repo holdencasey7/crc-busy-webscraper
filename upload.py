@@ -49,22 +49,22 @@ def upload_file(source_file, dest_name, dest_folder=destination_folder_id):
     print(f"An error occurred: {error}")
     return False
 
-def create_chart_and_upload(chart_type: A.ChartTypes, chart_args: list=[]):
+def create_chart_and_upload(chart_type: A.PlotTypes, chart_args: list=[]):
     print(f"Creating Chart {chart_type.name}")
 
-    if chart_type == A.ChartTypes.WEEKDAY_FIXED_LINE:
+    if chart_type == A.PlotTypes.WEEKDAY_FIXED_LINE:
        if not chart_args or chart_args[0] not in [0,1,2,3,4,5,6]:
           print(f"{chart_type.name} requires 1 argument: WEEKDAY[0-6]")
           return False    
        source_file = A.fixed_linechart_for_weekday(int(chart_args[0]))
-    elif chart_type == A.ChartTypes.DATE_FIXED_LINE:
+    elif chart_type == A.PlotTypes.DATE_FIXED_LINE:
        if not chart_args:
           print(f"{chart_type.name} requires 1 argument: 'YYYY-MM-DD'")
           return False
        source_file = A.fixed_linechart_date(chart_args[0])
-    elif chart_type == A.ChartTypes.OVERLAYED_WEEKDAYS_FIXED_LINE:
+    elif chart_type == A.PlotTypes.OVERLAYED_WEEKDAYS_FIXED_LINE:
        source_file = A.overlay_weekdays()
-    elif chart_type == A.ChartTypes.TOTAL_AVERAGES:
+    elif chart_type == A.PlotTypes.TOTAL_AVERAGES:
        source_file = A.total_averages()
     else:
        print(f"Invalid Chart Type {chart_type}")

@@ -6,12 +6,16 @@ import datetime
 import schedule
 
 def collect_without_existing_db(length=15):
+    """Create a default database, then collect data for specified time"""
+
     # Create db and drop tables if exist
     crcdb.create_db_and_drop()
     collect(length)
     
 
 def collect(length=15):
+    """Collect data for specified time"""
+
     # Repeat every 1 minute
     crc_timer = crctimer.CRC_Timer()
     crc_timer.start()
@@ -19,10 +23,15 @@ def collect(length=15):
     crc_timer.stop()
 
 def collect_forever():
+    """Collect data indefinitely"""
+
     crc_timer = crctimer.CRC_Timer()
     crc_timer.start()
 
 def scrape_and_insert():
+    """Calls the scraping method defined in scrape.py and inserts this data using crcdb.py methods.
+    First checks to see if CRC is closed according to schedule.py, and performs a scheduled close if it is."""
+
     # Get Time
     now = datetime.datetime.now()
 
