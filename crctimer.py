@@ -19,6 +19,6 @@ class Timer(threading.Thread):
 
 
 class CRC_Timer(Timer):
-    interval = 60*1
+    interval = 60*1 # 1 minute
     def timer(self):
         scrape_and_insert()

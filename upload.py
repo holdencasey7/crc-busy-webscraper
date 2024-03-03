@@ -9,7 +9,7 @@ import analysis as A
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/drive"]
-destination_folder_id = "1zZjkRWWPLLI5-Xqet1RpJ1NwtgSfUV6s"
+destination_folder_id = "1zZjkRWWPLLI5-Xqet1RpJ1NwtgSfUV6s" # User specific
 
 def upload_file(source_file, dest_name, dest_folder=destination_folder_id):
   creds = None
@@ -72,5 +72,4 @@ def create_chart_and_upload(chart_type: A.ChartTypes, chart_args: list=[]):
     
     return upload_file(source_file, source_file, destination_folder_id)
 
-create_chart_and_upload(A.ChartTypes.TOTAL_AVERAGES)
 

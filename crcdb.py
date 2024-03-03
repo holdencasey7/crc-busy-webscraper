@@ -1,7 +1,7 @@
 import sqlite3
 
-db = "crc.db"
-table = "busy_new"
+db = "crc.db" # User specific
+table = "busy_new" # User specific
 blank_data = {
     "weekday": -1,
     "hour": -1,
