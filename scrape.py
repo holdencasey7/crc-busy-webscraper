@@ -21,7 +21,7 @@ def get_busy_object(now=datetime.datetime.now()):
     valid = True
     try:
         # Have to do this because they randomize class names
-        wait_till_loaded = WebDriverWait(driver, 20).until(
+        _wait_till_loaded = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.TAG_NAME, "h2"))
         )
         # Will work so long as structure remains the same
