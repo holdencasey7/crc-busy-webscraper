@@ -270,6 +270,7 @@ def compare_date_to_average(date):
     plot.show()
 
 def compare_date_to_date():
+    """Under Construction"""
     return
 
 def compare_weekday_to_weekday(day1=0, day2=1):

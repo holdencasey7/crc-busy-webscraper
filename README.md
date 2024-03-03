@@ -1,12 +1,12 @@
 # CRC Busy Tracker
 
-The CRC Busy Tracker is a personal project that records how busy the GaTech Campus Recreation Center is at various times throughout the day.
-Uses live capacity data from https://live.waitz.io/4vxie66a29ct .
+The CRC Busy Tracker is a personal project that records how busy the GaTech Campus Recreation Center is at various times throughout the day.  
+Uses live capacity data from https://live.waitz.io/4vxie66a29ct  
 This project is currently operating on a Raspberry Pi 4 Model B running Raspberry Pi OS, but was tested on a local machine.
 
 ## Dependencies
 
-Written in Python 3.9.13
+Written in Python 3.9.13  
 Dependencies are listed in requirements.txt and can be installed with
 
 ```bash
@@ -29,16 +29,17 @@ The database portion. Uses sqlite. Methods to create the database and tables, in
 
 ### datacollection.py
 
-The data collection portion. Collect methods use the timer from crctimer.py, which continuously calls scrape_and_insert() for various time lengths. Running this file will call collect_forever(), which is aborted with ^C.
+The data collection portion. Collect methods use the timer from crctimer.py, which continuously calls scrape_and_insert() for various time lengths. Running this file will call collect_forever(), which is aborted by ^C.
 
 **scrape_and_insert()**:
 Calls the scraping method defined in scrape.py and inserts this data using crcdb.py methods.
 First checks to see if CRC is closed according to schedule.py, and performs a scheduled close if it is.
+
 Note: A 'scheduled close' occurs when the current time is known to be a time when the CRC is closed as stated on the GaTech webpage. A 'detected close' occurs when the CRC is assumed open, but is actually closed as indicated by waitz.io. This is likely during special events or holidays.
 
 ### crctimer.py
 
-A helper class to run the data collection portion every 1 minute
+A helper class to run the data collection portion every 1 minute.
 
 ### schedule.py
 
@@ -47,13 +48,13 @@ A helper class to determine if the current time is a scheduled close as indicate
 ### analysis.py
 
 The graphing portion. Uses matplotlib. Contains various methods that produce different graphs representing the collected data.
-When run from the command line, plots will be shown and not uploaded to Google Drive.
-Dynamic charts will not have a fixed y-axis, fixed or default charts will be fixed 0-100.
-Not all plots are necessarily useful or informative. The most effective (in my opinion) are those uploaded to Google Drive in upload.py.
+When run from the command line, plots will be shown and not uploaded to Google Drive.  
+Dynamic charts will not have a fixed y-axis, fixed or default charts will be fixed 0-100.  
+Not all plots are necessarily useful or informative. The most effective (in my opinion) are those uploaded to Google Drive in upload.py.  
 Command line format:
 
 ```bash
-python analysis.py -p [PLOT_TYPE] [OPTIONAL ARGS: -d [WEEKDAY 0-6] -i [YYYY-MM-DD] ]
+python analysis.py -p [PLOT_TYPE] [OPTIONAL ARGS: -d [WEEKDAY 0-6] -i [YYYY-MM-DD] -sd [WEEKDAY 0-6]]
 ```
 
 Plot types -p:
@@ -74,7 +75,7 @@ Plot types -p:
 ### upload.py
 
 The uploading portion. Uses Google Drive API to upload plots created in analysis.py to a folder in Google Drive.
-Authentication must be performed and is obvsiouly not included in the GitHub files.
+Authentication must be performed and is obvsiouly not included in the GitHub files.  
 Hint: files needed include
 
 - settings.yaml
