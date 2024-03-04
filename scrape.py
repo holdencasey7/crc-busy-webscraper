@@ -17,7 +17,7 @@ def get_busy_object():
     If the waitz.io site indicates the CRC is closed, a detected close will occur and percent_full will be set to -1."""
 
     # Use Selenium to scrape the page once it has fully loaded
-    driver = webdriver.Firefox(options=options) #, service=Service(path))
+    driver = webdriver.Firefox(options=options, service=Service(path))
     print("Headless Firefox Loaded")
     driver.get(url)
     valid = True
