@@ -69,6 +69,8 @@ def fixed_linechart_for_weekday(weekday=0, show=False):
     plot.savefig(filename)
     if show:
         plot.show()
+    else:
+        plot.clf()
     return filename
     # plot.show()
 
@@ -115,6 +117,8 @@ def fixed_linechart_date(date="2020-01-01", show=False):
     plot.savefig(filename)
     if show:
         plot.show()
+    else:
+        plot.clf()
     return filename
     # plot.show()
 
@@ -141,6 +145,8 @@ def overlay_weekdays(show=False):
     plot.savefig(filename)
     if show:
         plot.show()
+    else:
+        plot.clf()
     return filename
     # plot.show()
 
@@ -183,6 +189,8 @@ def total_averages(show=False):
     plot.savefig(filename)
     if show:
         plot.show()
+    else:
+        plot.clf()
     return filename
 
 def compare_weekday_to_average(weekday=0):

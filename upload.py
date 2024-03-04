@@ -73,6 +73,7 @@ def create_chart_and_upload(chart_type: A.PlotTypes, chart_args: list=[]):
     """Creates a chart and uploads it"""
 
     print(f"Creating Chart {chart_type.name}")
+    dest_file = False
 
     if chart_type == A.PlotTypes.WEEKDAY_FIXED_LINE:
        if not chart_args or chart_args[0] not in [0,1,2,3,4,5,6]:
@@ -98,11 +99,20 @@ def create_chart_and_upload(chart_type: A.PlotTypes, chart_args: list=[]):
     return (gdrive_uploaded, ftp_uploaded)
 
 def nightly_upload(now=datetime.datetime.now()):
-   ow_uploaded = create_chart_and_upload(A.PlotTypes.OVERLAYED_WEEKDAYS_FIXED_LINE)
-   fl_uploaded = create_chart_and_upload(A.PlotTypes.WEEKDAY_FIXED_LINE, [now.weekday()])
-   ifl_uploaded = create_chart_and_upload(A.PlotTypes.DATE_FIXED_LINE, [now.strftime('%Y-%m-%d')])
-   ta_uploaded = create_chart_and_upload(A.PlotTypes.TOTAL_AVERAGES)
-   return (ow_uploaded, fl_uploaded, ifl_uploaded, ta_uploaded)
+    """Uploads the updated overlay, current weekday, current date, and total averages charts"""
+
+    ow_uploaded = create_chart_and_upload(A.PlotTypes.OVERLAYED_WEEKDAYS_FIXED_LINE)
+    fl_uploaded = create_chart_and_upload(A.PlotTypes.WEEKDAY_FIXED_LINE, [now.weekday()])
+    ifl_uploaded = create_chart_and_upload(A.PlotTypes.DATE_FIXED_LINE, [now.strftime('%Y-%m-%d')])
+    ta_uploaded = create_chart_and_upload(A.PlotTypes.TOTAL_AVERAGES)
+    db_uploaded = upload_file_to_gdrive("crc.db", "crc.db")
+    return (ow_uploaded, fl_uploaded, ifl_uploaded, ta_uploaded, db_uploaded)
+
+def upload_all_weekdays():
+   """Uploads all weekdays"""
+
+   for i in range(0,7):
+      create_chart_and_upload(A.PlotTypes.WEEKDAY_FIXED_LINE, [i])
 
 if __name__ == "__main__":
    nightly_upload()

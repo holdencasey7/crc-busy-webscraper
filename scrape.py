@@ -4,7 +4,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
-import datetime
 
 # CRC Website for Wait Times
 url = "https://live.waitz.io/4vxie66a29ct"
