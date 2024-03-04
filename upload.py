@@ -6,12 +6,17 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 import analysis as A
+from paramiko import SSHClient, AutoAddPolicy
+# Replace with your FTP credentials or delete
+import ftp_login
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/drive"]
-destination_folder_id = "1zZjkRWWPLLI5-Xqet1RpJ1NwtgSfUV6s" # User specific
+gdrive_destination_folder_id = "1zZjkRWWPLLI5-Xqet1RpJ1NwtgSfUV6s" # User specific
 
-def upload_file(source_file, dest_name, dest_folder=destination_folder_id):
+def upload_file_to_gdrive(source_file, dest_name, dest_folder=gdrive_destination_folder_id):
+  """Uploads a file to a specified folder in Google Drive"""
+
   creds = None
   if os.path.exists("token.json"):
     creds = Credentials.from_authorized_user_file("token.json", SCOPES)
@@ -48,8 +53,23 @@ def upload_file(source_file, dest_name, dest_folder=destination_folder_id):
   except HttpError as error:
     print(f"An error occurred: {error}")
     return False
+  
+def upload_file_SFTP(source_file, host=ftp_login.host, port=ftp_login.port, username=ftp_login.username, password=ftp_login.password):
+    """Uploads a file to an FTP server using SFTP. Uses FTP credentials in ftp_login.py by default."""
+
+    with SSHClient() as ssh:
+       print("SFTP connecting")
+       ssh.set_missing_host_key_policy(AutoAddPolicy())
+       ssh.connect(hostname=host,port=port,username=username,password=password)
+       with ssh.open_sftp() as sftp:
+          files = sftp.put(source_file, source_file)
+        
+    return files
+          
 
 def create_chart_and_upload(chart_type: A.PlotTypes, chart_args: list=[]):
+    """Creates a chart and uploads it"""
+
     print(f"Creating Chart {chart_type.name}")
 
     if chart_type == A.PlotTypes.WEEKDAY_FIXED_LINE:
@@ -70,6 +90,7 @@ def create_chart_and_upload(chart_type: A.PlotTypes, chart_args: list=[]):
        print(f"Invalid Chart Type {chart_type}")
        return False
     
-    return upload_file(source_file, source_file, destination_folder_id)
-
+    gdrive_uploaded = upload_file_to_gdrive(source_file, source_file, gdrive_destination_folder_id)
+    ftp_uploaded = upload_file_SFTP(source_file)
+    return (gdrive_uploaded, ftp_uploaded)
 

@@ -158,3 +158,5 @@ crc.db
 settings.yaml
 credentials.json
 token.json
+ftp_login.py
+index.html

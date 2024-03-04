@@ -75,9 +75,9 @@ Plot types -p:
 
 ### upload.py
 
-The uploading portion. Uses Google Drive API to upload plots created in analysis.py to a folder in Google Drive. File names correspond to plot flag arguments listed above.  
+The uploading portion. Uses Google Drive API to upload plots created in analysis.py to a folder in Google Drive and paramiko to upload plots to an SFTP server. File names correspond to plot flag arguments listed above.  
 Authentication must be performed manually and is obvsiouly not included in the GitHub files.  
-Hint: files needed include
+Hint: files needed for Google Drive include
 
 - settings.yaml
 - credentials.json
@@ -93,6 +93,7 @@ Files that are produced/needed but not included in the GitHub files.
 - **crc.db**: The local database accessed via sqlite
 - **Google API Auth**: As detailed in upload.py section, files required to authenticate Google Drive user
 - **\*.png**: Images of plots created by analysis.py
+- **ftp_login.py**: My personal FTP host and login credentials
 
 ## Authors
 
