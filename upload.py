@@ -55,7 +55,7 @@ def upload_file_to_gdrive(source_file, dest_name, dest_folder=gdrive_destination
     print(f"An error occurred: {error}")
     return False
   
-def upload_file_SFTP(source_file, host=ftp_login.host, port=ftp_login.port, username=ftp_login.username, password=ftp_login.password, path=ftp_login.path):
+def upload_file_SFTP(source_file, dest_filename, host=ftp_login.host, port=ftp_login.port, username=ftp_login.username, password=ftp_login.password, path=ftp_login.path):
     """Uploads a file to an FTP server using SFTP. Uses FTP credentials in ftp_login.py by default."""
 
     with SSHClient() as ssh:
@@ -64,7 +64,7 @@ def upload_file_SFTP(source_file, host=ftp_login.host, port=ftp_login.port, user
        ssh.connect(hostname=host,port=port,username=username,password=password)
        with ssh.open_sftp() as sftp:
           sftp.chdir(path)
-          files = sftp.put(localpath=source_file, remotepath=source_file)
+          files = sftp.put(localpath=source_file, remotepath=dest_filename)
         
     return files
           
@@ -84,6 +84,7 @@ def create_chart_and_upload(chart_type: A.PlotTypes, chart_args: list=[]):
           print(f"{chart_type.name} requires 1 argument: 'YYYY-MM-DD'")
           return False
        source_file = A.fixed_linechart_date(chart_args[0])
+       dest_file = "date.png"
     elif chart_type == A.PlotTypes.OVERLAYED_WEEKDAYS_FIXED_LINE:
        source_file = A.overlay_weekdays()
     elif chart_type == A.PlotTypes.TOTAL_AVERAGES:
@@ -93,7 +94,7 @@ def create_chart_and_upload(chart_type: A.PlotTypes, chart_args: list=[]):
        return False
     
     gdrive_uploaded = upload_file_to_gdrive(source_file, source_file, gdrive_destination_folder_id)
-    ftp_uploaded = upload_file_SFTP(source_file)
+    ftp_uploaded = upload_file_SFTP(source_file, dest_file) if dest_file else upload_file_SFTP(source_file, source_file)
     return (gdrive_uploaded, ftp_uploaded)
 
 def nightly_upload(now=datetime.datetime.now()):
