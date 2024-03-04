@@ -38,7 +38,14 @@ def scrape_and_insert():
     # If open, collect data
     if schedule.is_crc_open_typical(now):
         # Scrape CRC site
-        busy_object = scrape.get_busy_object(now)
+        percent_full = scrape.get_busy_object()
+        busy_object = {
+            "weekday": now.weekday(),
+            "hour": now.hour,
+            "minute": now.minute,
+            "busy": percent_full,
+            "isodate": now.strftime('%Y-%m-%d')
+        }
         # Insert the data
         crcdb.insert_data(crcdb.db, crcdb.table, busy_object)
     else:

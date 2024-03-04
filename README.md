@@ -21,7 +21,7 @@ pip install -r requirements.txt
 The webscraping portion. Uses selenium. The mainfloor gym is the only section currently being tracked, although more sections (primarily the 4th floor courts) could be tracked in the future.
 
 **get_busy_object(now)**:
-Scrapes the live capacity data using Firefox WebDriver and returns the percent full, along with time data, in a single object.
+Scrapes the live capacity data using Firefox WebDriver and returns the percent full.
 If the waitz.io site indicates the CRC is closed, a detected close will occur and percent_full will be set to -1.
 
 ### crcdb.py
@@ -33,7 +33,7 @@ The database portion. Uses sqlite. Methods to create the database and tables, in
 The data collection portion. Collect methods use the timer from crctimer.py, which continuously calls scrape_and_insert() for various time lengths. Running this file will call collect_forever(), which is aborted by ^C.
 
 **scrape_and_insert()**:
-Calls the scraping method defined in scrape.py and inserts this data using crcdb.py methods.
+Calls the scraping method defined in scrape.py, formats it, and inserts this data using crcdb.py methods.
 First checks to see if CRC is closed according to schedule.py, and performs a scheduled close if it is.
 
 Note: A 'scheduled close' occurs when the current time is known to be a time when the CRC is closed as stated on the GaTech webpage. A 'detected close' occurs when the CRC is assumed open, but is actually closed as indicated by waitz.io. This is likely during special events or holidays.
@@ -75,7 +75,7 @@ Plot types -p:
 
 ### upload.py
 
-The uploading portion. Uses Google Drive API to upload plots created in analysis.py to a folder in Google Drive and paramiko to upload plots to an SFTP server. File names correspond to plot flag arguments listed above.  
+The uploading portion. Uses Google Drive API to upload plots created in analysis.py to a folder in Google Drive and paramiko to upload plots to an SFTP server. File names correspond to plot flag arguments listed above. Running this file as a script will initiate a nightly upload, uploading updated averages and the current date's figures.  
 Authentication must be performed manually and is obvsiouly not included in the GitHub files.  
 Hint: files needed for Google Drive include
 

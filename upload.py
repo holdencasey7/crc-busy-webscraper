@@ -9,6 +9,7 @@ import analysis as A
 from paramiko import SSHClient, AutoAddPolicy
 # Replace with your FTP credentials or delete
 import ftp_login
+import datetime
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/drive"]
@@ -54,7 +55,7 @@ def upload_file_to_gdrive(source_file, dest_name, dest_folder=gdrive_destination
     print(f"An error occurred: {error}")
     return False
   
-def upload_file_SFTP(source_file, host=ftp_login.host, port=ftp_login.port, username=ftp_login.username, password=ftp_login.password):
+def upload_file_SFTP(source_file, host=ftp_login.host, port=ftp_login.port, username=ftp_login.username, password=ftp_login.password, path=ftp_login.path):
     """Uploads a file to an FTP server using SFTP. Uses FTP credentials in ftp_login.py by default."""
 
     with SSHClient() as ssh:
@@ -62,7 +63,8 @@ def upload_file_SFTP(source_file, host=ftp_login.host, port=ftp_login.port, user
        ssh.set_missing_host_key_policy(AutoAddPolicy())
        ssh.connect(hostname=host,port=port,username=username,password=password)
        with ssh.open_sftp() as sftp:
-          files = sftp.put(source_file, source_file)
+          sftp.chdir(path)
+          files = sftp.put(localpath=source_file, remotepath=source_file)
         
     return files
           
@@ -94,3 +96,12 @@ def create_chart_and_upload(chart_type: A.PlotTypes, chart_args: list=[]):
     ftp_uploaded = upload_file_SFTP(source_file)
     return (gdrive_uploaded, ftp_uploaded)
 
+def nightly_upload(now=datetime.datetime.now()):
+   ow_uploaded = create_chart_and_upload(A.PlotTypes.OVERLAYED_WEEKDAYS_FIXED_LINE)
+   fl_uploaded = create_chart_and_upload(A.PlotTypes.WEEKDAY_FIXED_LINE, [now.weekday()])
+   ifl_uploaded = create_chart_and_upload(A.PlotTypes.DATE_FIXED_LINE, [now.strftime('%Y-%m-%d')])
+   ta_uploaded = create_chart_and_upload(A.PlotTypes.TOTAL_AVERAGES)
+   return (ow_uploaded, fl_uploaded, ifl_uploaded, ta_uploaded)
+
+if __name__ == "__main__":
+   nightly_upload()

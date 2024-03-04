@@ -13,8 +13,8 @@ path = "/usr/local/bin/geckodriver" # User specific
 options = Options()
 options.add_argument("--headless")
 
-def get_busy_object(now=datetime.datetime.now()):
-    """Scrapes the live capacity data using Firefox WebDriver and returns the percent full, along with time data, in a single object.
+def get_busy_object():
+    """Scrapes the live capacity data using Firefox WebDriver and returns the percent full.
     If the waitz.io site indicates the CRC is closed, a detected close will occur and percent_full will be set to -1."""
 
     # Use Selenium to scrape the page once it has fully loaded
@@ -22,6 +22,7 @@ def get_busy_object(now=datetime.datetime.now()):
     print("Headless Firefox Loaded")
     driver.get(url)
     valid = True
+    # Should change to with ?
     try:
         # Have to do this because they randomize class names
         _wait_till_loaded = WebDriverWait(driver, 20).until(
@@ -49,15 +50,6 @@ def get_busy_object(now=datetime.datetime.now()):
             integer_busy = -1
 
         driver.quit()
-        current_time = now
 
-    # Combine current time and busy into single object
-    busy_at_time = {
-        "weekday": current_time.weekday(),
-        "hour": current_time.hour,
-        "minute": current_time.minute,
-        "busy": integer_busy,
-        "isodate": current_time.strftime('%Y-%m-%d')
-    }
-    print(busy_at_time)
-    return busy_at_time
+    print(integer_busy)
+    return integer_busy
