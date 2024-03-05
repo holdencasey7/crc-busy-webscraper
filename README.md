@@ -83,8 +83,8 @@ Hint: files needed for Google Drive include
 - credentials.json
 - token.json
 
-This portion is currently under construction. The goal is to have images uploaded automatically nightly, as opposed to manually.  
-View data plots at https://drive.google.com/drive/folders/1zZjkRWWPLLI5-Xqet1RpJ1NwtgSfUV6s
+Currently run as a CRON job on Raspberry Pi every night at 11:45 PM.
+View data plots at https://drive.google.com/drive/folders/1zZjkRWWPLLI5-Xqet1RpJ1NwtgSfUV6s or holdencasey.com/crc-tracker
 
 ## Non-Included Files
 
