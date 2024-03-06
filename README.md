@@ -46,6 +46,10 @@ A helper class to run the data collection portion every 1 minute.
 
 A helper class to determine if the current time is a scheduled close as indicated on the GaTech posted hours.
 
+### rundaily.py
+
+A helper class to determine if datacollection.py is running, and if it is not, start it. Used as a CRON job on Raspberry Pi.
+
 ### analysis.py
 
 The graphing portion. Uses matplotlib. Contains various methods that produce different graphs representing the collected data.
